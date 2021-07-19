@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xml-stylesheet href="styl.css" type="text/css" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl">
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/prism.min.js"></script>
+ <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="keywords" content="personal page, fyqer">
+ <meta name="author" content="Daniel Gałeczka">
+<title>Fyqer_blog</title>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/themes/prism.min.css"
+/>
+<link rel="stylesheet" type="text/css" href="styl.css" />
+<link rel="stylesheet" href="styl.css">
+
+</head>
+<body>
+<div id="yah"></a></div>
+<div id="menu">
+<h2 id="luk">Menu</h2>
+<a href="index.html" class="link">/index</a> </br>
+<a href="index.html" class="link">/thm_writeups</a>
+<a href="index.html" class="link">/ctf_writeups</a>
+<a href="index.html" class="link">/other_writeups</a>
+<a href="About_author.html" class="link">/About_author</a>
+
+<p id="copy">&copy; copyright by ... Daniel Gałeczka</p></div>
+
+<div class = "d">
+
+██████╗░░░░░░██╗░█████╗░░██████╗░███╗░░██╗░██████╗░░█████╗░░█████╗░████████╗███████╗
+██╔══██╗░░░░░██║██╔══██╗██╔════╝░████╗░██║██╔════╝░██╔══██╗██╔══██╗╚══██╔══╝██╔════╝
+██║░░██║░░░░░██║███████║██║░░██╗░██╔██╗██║██║░░██╗░██║░░██║██║░░╚═╝░░░██║░░░█████╗░░
+██║░░██║██╗░░██║██╔══██║██║░░╚██╗██║╚████║██║░░╚██╗██║░░██║██║░░██╗░░░██║░░░██╔══╝░░
+██████╔╝╚█████╔╝██║░░██║╚██████╔╝██║░╚███║╚██████╔╝╚█████╔╝╚█████╔╝░░░██║░░░██║░░░░░
+╚═════╝░░╚════╝░╚═╝░░╚═╝░╚═════╝░╚═╝░░╚══╝░╚═════╝░░╚════╝░░╚════╝░░░░╚═╝░░░╚═╝░░░░░
+</div>
+
+<div class="content">
+</br>
+</br>
+</br>
+</br>
+</br>
+</br></br>
+</br>
+
+
+<a href="https://tryhackme.com/room/django">
+    <div class="link">
+         <p>Link to the challenge</p>
+		 
+			
+    </div>
+</a>
+<p>This challenge is about popular python framework -Django. We have to get 3 flags by repair misconfigurations in Django.</p>
+<p> First think we have to do is login by given SSH credentials. </p>
+
+
+<img src="walkth/django1.jpg" width="450" height="250">
+
+
+<p>After open port 8000 in browser we have been informed of the need to add a local ip address to ALLOWED_HOSTS in' settings' configuration file: </p>
+
+
+<img src="walkth/django2.jpg" width="550" height="150">
+<p>After we add a properly address we could see a django admin login page but we still did not have a user, this command made it:.
+</p>
+<pre><code class="language-php">
+python3 manage.py createsuperuser
+</pre>
+<p>When we created a super user and login to the page, navigate to 'Users' and we have get first flag,</p>
+<p>additionaly next to the flag we have a username for ssh and hashed password, after cracking hash we could easly read plaintext password.</p>
+<img src="walkth/django3.jpg" width="550" height="150">
+
+<p>Next step was login to ssh by given credentials and cat user.txt,and flag appeared.</p>
+<img src="walkth/django4.jpg" width="450" height="150">
+<p>Last of required flag was in the ssh server ( logged as first user) in home.html file</p>
+
+
+</div>
+
+</body>
+</html>

